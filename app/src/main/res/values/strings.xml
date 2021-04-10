@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">WeChatMiniProject</string>
+    
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+    <string name="back4app_app_id">eLxrs2FjSLtTP358VzZx9XczAfZAHIeol58Ocr0n</string>
+    <string name="back4app_client_key">hiSXpP3RBRdt6KvtwFsmvDukLqhMn8o62r9BoB6U</string>
+    
 </resources>
