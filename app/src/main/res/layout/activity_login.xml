@@ -13,17 +13,18 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="280dp"
         android:fontFamily="@font/belleza"
+        android:onClick="login"
         android:text="Login"
         android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextUserPassword2"
+        app:layout_constraintTop_toBottomOf="@+id/editTextUserPasswordLogin"
         app:layout_constraintVertical_bias="0.463" />
 
     <EditText
-        android:id="@+id/editTextUserPassword2"
+        android:id="@+id/editTextUserPasswordLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -35,18 +36,18 @@
         android:ems="10"
         android:fontFamily="@font/belleza"
         android:hint="Password"
-        android:inputType="textEmailAddress"
+        android:inputType="textPassword"
         android:padding="7dp"
         android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextUserName2"
+        app:layout_constraintTop_toBottomOf="@+id/editTextUserNameLogin"
         app:layout_constraintVertical_bias="0.128" />
 
     <EditText
-        android:id="@+id/editTextUserName2"
+        android:id="@+id/editTextUserNameLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -93,4 +94,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.099"
         app:srcCompat="@drawable/hangouts" />
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button2"
+        app:layout_constraintVertical_bias="0.399" />
 </androidx.constraintlayout.widget.ConstraintLayout>
