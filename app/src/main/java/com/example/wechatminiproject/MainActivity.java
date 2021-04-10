@@ -3,7 +3,9 @@ package com.example.wechatminiproject;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
 
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         editTextUserConfirm = findViewById(R.id.editTextUserConfirmPassword);
 
         progressBar = findViewById(R.id.progressBar);
+
+        sharedPreferences = this.getSharedPreferences("com.example.wechatminiproject", Context.MODE_PRIVATE);
 
         ParseInstallation.getCurrentInstallation().saveInBackground();
 
@@ -106,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     ParseUser.logOut();
                     progressBar.setVisibility(View.INVISIBLE);
+                    sharedPreferences.edit().putBoolean("isNewUser",true).apply();
                     showAlert("Account Created Successfully!", "Please verify your email before Login", false);
                 }
                 else
@@ -126,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     if (!error) {
                         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("userEmail",editTextUserEmail.getText().toString());
                         startActivity(intent);
                     }
                 });

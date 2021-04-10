@@ -3,7 +3,9 @@ package com.example.wechatminiproject;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +25,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText editTextPassword;
     ProgressBar progressBar;
 
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextUserPasswordLogin);
 
         progressBar = findViewById(R.id.progressBar2);
+
+        sharedPreferences = this.getSharedPreferences("com.example.wechatminiproject", Context.MODE_PRIVATE);
 
         Objects.requireNonNull(getSupportActionBar()).hide();
 
@@ -80,10 +86,24 @@ public class LoginActivity extends AppCompatActivity {
                 .setPositiveButton("OK", (dialog, which) -> {
                     dialog.cancel();
                     if (!error) {
-//                        Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        startActivity(intent);
-                        Toast.makeText(LoginActivity.this,"Success",Toast.LENGTH_SHORT).show();
+
+                        boolean isNewUser = sharedPreferences.getBoolean("isNewUser",false);
+                        Intent intent = null;
+
+                        if(isNewUser)
+                        {
+                            intent = new Intent(LoginActivity.this,AddInfoActivity.class);
+                            intent.putExtra("username",editTextUsername.getText().toString());
+                            String email = getIntent().getStringExtra("userEmail");
+                            intent.putExtra("userEmail",email);
+                        }
+                        else
+                        {
+                            intent = new Intent(LoginActivity.this,HomeActivity.class);
+                        }
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+
                     }
                 });
         AlertDialog ok = builder.create();
