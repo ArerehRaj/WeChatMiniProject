@@ -2,7 +2,9 @@ package com.example.wechatminiproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.parse.ParseInstallation;
 
@@ -19,5 +21,11 @@ public class MainActivity extends AppCompatActivity {
 
         ParseInstallation.getCurrentInstallation().saveInBackground();
 
+    }
+
+    public void goToLogin(View view)
+    {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 }
