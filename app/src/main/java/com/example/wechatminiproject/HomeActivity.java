@@ -5,16 +5,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
@@ -34,8 +40,6 @@ public class HomeActivity extends AppCompatActivity {
         sharedPreferences = this.getSharedPreferences("com.example.wechatminiproject", Context.MODE_PRIVATE);
 
         boolean isNewUser = sharedPreferences.getBoolean("isNewUser", false);
-
-//        Toast.makeText(this,"Is new User " + isNewUser, Toast.LENGTH_SHORT).show();
 
         ParseQuery<ParseObject> currentStudent = new ParseQuery<ParseObject>("Students");
         currentStudent.whereEqualTo("Username",ParseUser.getCurrentUser().getUsername());
@@ -66,10 +70,12 @@ public class HomeActivity extends AppCompatActivity {
 
     public void goToChats(View view)
     {
+
         Intent intent = new Intent(HomeActivity.this, ChatsActivity.class);
         intent.putExtra("division",division);
         intent.putExtra("year",year);
         intent.putExtra("branch",branch);
         startActivity(intent);
+
     }
 }
