@@ -36,6 +36,13 @@ public class MainActivity extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).hide();
 
+        if(ParseUser.getCurrentUser() != null)
+        {
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+
         editTextUserName = findViewById(R.id.editTextUserName);
         editTextUserEmail = findViewById(R.id.editTextUserEmail);
         editTextUserPassword = findViewById(R.id.editTextUserPassword);
