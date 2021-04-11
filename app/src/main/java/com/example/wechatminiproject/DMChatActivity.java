@@ -1,9 +1,14 @@
 package com.example.wechatminiproject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -41,7 +46,23 @@ public class DMChatActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("username");
 
         chatsListView = findViewById(R.id.dmsListView);
-        arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, messageList);
+        arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, messageList){
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+                View view = super.getView(position, convertView, parent);
+                TextView one = view.findViewById(android.R.id.text1);
+                one.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+
+                if(!one.getText().toString().contains(">"))
+                {
+                    one.setGravity(Gravity.END);
+                }
+
+                return view;
+            }
+        };
         chatsListView.setAdapter(arrayAdapter);
 
         ParseQuery<ParseObject> queryOne = new ParseQuery<ParseObject>("DMS");
@@ -70,9 +91,9 @@ public class DMChatActivity extends AppCompatActivity {
                         for(ParseObject object : objects)
                         {
                             String messageContent = object.get("message").toString();
-                            if(object.get("sender") != ParseUser.getCurrentUser().getUsername())
+                            if(!object.get("sender").equals( ParseUser.getCurrentUser().getUsername()))
                             {
-                                messageContent = "> " + "messageContent";
+                                messageContent = "> " + messageContent;
                             }
                             messageList.add(messageContent);
                         }
