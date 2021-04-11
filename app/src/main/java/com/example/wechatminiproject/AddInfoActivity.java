@@ -7,8 +7,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -39,6 +41,8 @@ public class AddInfoActivity extends AppCompatActivity {
     EditText editTextUserGenderProfile;
     Bitmap bitmap;
 
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +60,8 @@ public class AddInfoActivity extends AppCompatActivity {
 
         editTextUserNameProfile.setText(getIntent().getStringExtra("username"));
         editTextUserEmailProfile.setText(getIntent().getStringExtra("userEmail"));
+
+        sharedPreferences = this.getSharedPreferences("com.example.wechatminiproject", Context.MODE_PRIVATE);
 
     }
 
@@ -172,9 +178,6 @@ public class AddInfoActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        startActivity(intent);
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.PNG,100,stream);
@@ -196,17 +199,19 @@ public class AddInfoActivity extends AppCompatActivity {
                         student.saveInBackground(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-                                String message = "";
+                                Intent intent = null;
                                 if(e == null)
                                 {
-                                    message = "User Details Saved";
+                                    sharedPreferences.edit().putBoolean("isNewUser",false).apply();
+                                    intent = new Intent(AddInfoActivity.this, HomeActivity.class);
                                 }
                                 else
                                 {
-                                    message = "An Error Occurred";
+                                    intent = new Intent(AddInfoActivity.this, MainActivity.class);
                                 }
 
-                                Toast.makeText(AddInfoActivity.this,message,Toast.LENGTH_SHORT).show();
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
                             }
                         });
 
