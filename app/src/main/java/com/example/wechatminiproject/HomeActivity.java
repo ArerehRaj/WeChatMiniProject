@@ -9,11 +9,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
+    String division = "";
+    String year = "";
+    String branch = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +35,25 @@ public class HomeActivity extends AppCompatActivity {
 
         boolean isNewUser = sharedPreferences.getBoolean("isNewUser", false);
 
-        Toast.makeText(this,"Is new User " + isNewUser, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this,"Is new User " + isNewUser, Toast.LENGTH_SHORT).show();
+
+        ParseQuery<ParseObject> currentStudent = new ParseQuery<ParseObject>("Students");
+        currentStudent.whereEqualTo("Username",ParseUser.getCurrentUser().getUsername());
+
+        currentStudent.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e == null)
+                {
+                    for(ParseObject object : objects)
+                    {
+                        division = object.get("Division").toString();
+                        year = object.get("Year").toString();
+                        branch = object.get("Branch").toString();
+                    }
+                }
+            }
+        });
     }
 
     public void logOut(View view)
@@ -34,6 +61,15 @@ public class HomeActivity extends AppCompatActivity {
         ParseUser.logOut();
         Intent intent = new Intent(HomeActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    public void goToChats(View view)
+    {
+        Intent intent = new Intent(HomeActivity.this, ChatsActivity.class);
+        intent.putExtra("division",division);
+        intent.putExtra("year",year);
+        intent.putExtra("branch",branch);
         startActivity(intent);
     }
 }
