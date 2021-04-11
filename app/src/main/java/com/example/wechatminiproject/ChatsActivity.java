@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class ChatsActivity extends AppCompatActivity {
     List<String> fullNames = new ArrayList<>();
     List<Bitmap> profileImages = new ArrayList<>();
     List<ParseFile> files = new ArrayList<>();
+    List<String> userNames = new ArrayList<>();
 
     ListView chatsListView;
     MyAdapter myAdapter;
@@ -66,6 +68,7 @@ public class ChatsActivity extends AppCompatActivity {
                     fullNames.clear();
                     profileImages.clear();
                     files.clear();
+                    userNames.clear();
 
                     if(objects.size() > 0 && objects != null)
                     {
@@ -74,6 +77,7 @@ public class ChatsActivity extends AppCompatActivity {
                             fullNames.add(object.get("FullName").toString());
                             ParseFile image = (ParseFile) object.get("ProfileImage");
                             files.add(image);
+                            userNames.add(object.get("Username").toString());
                         }
 
                         System.out.println("Size of images Array " + profileImages.size());
@@ -83,7 +87,13 @@ public class ChatsActivity extends AppCompatActivity {
                         chatsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Toast.makeText(ChatsActivity.this,fullNames.get(position) + " Clicked", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(ChatsActivity.this,fullNames.get(position) + " Clicked", Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(ChatsActivity.this, DMChatActivity.class);
+                                intent.putExtra("name",fullNames.get(position));
+                                intent.putExtra("username", userNames.get(position));
+                                startActivity(intent);
+
                             }
                         });
                     }

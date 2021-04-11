@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeChatMiniProject">
-        <activity android:name=".ChatsActivity"></activity>
+        <activity android:name=".DMChatActivity"></activity>
+        <activity android:name=".ChatsActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".AddInfoActivity" />
         <activity android:name=".LoginActivity" />
