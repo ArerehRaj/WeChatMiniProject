@@ -82,6 +82,9 @@ public class HomeActivity extends AppCompatActivity {
     public void goToGroupChats(View view)
     {
         Intent intent = new Intent(HomeActivity.this, GroupChatsActivity.class);
+        intent.putExtra("division",division);
+        intent.putExtra("year",year);
+        intent.putExtra("branch",branch);
         startActivity(intent);
     }
 }

@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -89,6 +90,15 @@ public class GroupChatsActivity extends AppCompatActivity {
                 groupsListView.setAdapter(myAdapter);
             }
 
+    }
+
+    public void addGroup(View view)
+    {
+        Intent intent = new Intent(GroupChatsActivity.this,AddUsersInGroupsActivity.class);
+        intent.putExtra("division",getIntent().getStringExtra("division"));
+        intent.putExtra("year",getIntent().getStringExtra("year"));
+        intent.putExtra("branch",getIntent().getStringExtra("branch"));
+        startActivity(intent);
     }
 
     class MyAdapter extends ArrayAdapter<String>
