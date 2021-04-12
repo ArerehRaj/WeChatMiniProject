@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundchat"
+    tools:context=".AddGroupActivity">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/belleza"
+        android:text="Add Details"
+        android:textColor="#000000"
+        android:textSize="44dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.022" />
+
+    <ImageView
+        android:id="@+id/imageViewGroupIcon"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.079"
+        app:srcCompat="@drawable/protect" />
+
+    <TextView
+        android:id="@+id/selectGroupIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:fontFamily="@font/belleza"
+        android:onClick="selectImageGroup"
+        android:text="Select Group Image"
+        android:textColor="#000000"
+        android:textSize="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewGroupIcon"
+        app:layout_constraintVertical_bias="0.037" />
+
+    <EditText
+        android:id="@+id/editTextGroupName"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:ems="10"
+        android:fontFamily="@font/belleza"
+        android:hint="Add Group Name"
+        android:inputType="textPersonName"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectGroupIcon"
+        app:layout_constraintVertical_bias="0.062" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/belleza"
+        android:onClick="CreateGroup"
+        android:text="Create Group"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextGroupName"
+        app:layout_constraintVertical_bias="0.11" />
+</androidx.constraintlayout.widget.ConstraintLayout>

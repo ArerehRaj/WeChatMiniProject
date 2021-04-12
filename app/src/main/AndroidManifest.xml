@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeChatMiniProject">
-        <activity android:name=".AddUsersInGroupsActivity"></activity>
+        <activity android:name=".AddGroupActivity"></activity>
+        <activity android:name=".AddUsersInGroupsActivity" />
         <activity android:name=".GroupChatsActivity" />
         <activity android:name=".DMChatActivity" />
         <activity android:name=".ChatsActivity" />

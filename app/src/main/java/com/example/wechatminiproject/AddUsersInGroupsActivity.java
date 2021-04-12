@@ -1,14 +1,20 @@
 package com.example.wechatminiproject;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -27,6 +33,7 @@ public class AddUsersInGroupsActivity extends AppCompatActivity {
     List<String> users = new ArrayList<>();
     List<String> checkedUsers = new ArrayList<>();
     List<String> usernames = new ArrayList<>();
+    List<String> checkedUsernames = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +45,16 @@ public class AddUsersInGroupsActivity extends AppCompatActivity {
         myListView = findViewById(R.id.checkUsersListView);
         myListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_checked,users);
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_checked,users){
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView one = view.findViewById(android.R.id.text1);
+                one.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                return view;
+            }
+        };
         myListView.setAdapter(arrayAdapter);
 
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -48,10 +64,12 @@ public class AddUsersInGroupsActivity extends AppCompatActivity {
                 if(checkedTextView.isChecked())
                 {
                     checkedUsers.add(users.get(position));
+                    checkedUsernames.add(usernames.get(position));
                 }
                 else
                 {
-                    checkedUsers.remove(position);
+                    checkedUsers.remove(users.get(position));
+                    checkedUsernames.remove(usernames.get(position));
                 }
             }
         });
@@ -81,8 +99,22 @@ public class AddUsersInGroupsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    public void NextActivity(View view)
+    {
+        Intent intent = new Intent(AddUsersInGroupsActivity.this,AddGroupActivity.class);
+        String[] selectedUsers = new String[checkedUsers.size()];
+        String[] selectedUsersNames = new String[checkedUsernames.size()];
 
+        for(int i=0; i<checkedUsers.size(); i++)
+        {
+            selectedUsers[i] = checkedUsers.get(i);
+            selectedUsersNames[i] = checkedUsernames.get(i);
+        }
 
+        intent.putExtra("selectedUsers",selectedUsers);
+        intent.putExtra("selectedUserNames", selectedUsersNames);
+        startActivity(intent);
     }
 }
