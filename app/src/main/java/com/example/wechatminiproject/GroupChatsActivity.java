@@ -13,10 +13,12 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.GetDataCallback;
@@ -51,6 +53,16 @@ public class GroupChatsActivity extends AppCompatActivity {
 
         title.setText(ParseUser.getCurrentUser().getUsername() + "'s Groups");
         groupsListView = findViewById(R.id.groupsListView);
+
+        groupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Toast.makeText(GroupChatsActivity.this, GroupNames.get(position) + " CLicked", Toast.LENGTH_SHORT).show();
+                Intent newIntent = new Intent(GroupChatsActivity.this, GroupChatDMActivity.class);
+                newIntent.putExtra("name",GroupNames.get(position));
+                startActivity(newIntent);
+            }
+        });
 
 
             ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Groups");

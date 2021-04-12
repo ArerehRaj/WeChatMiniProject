@@ -111,7 +111,7 @@ public class AddGroupActivity extends AppCompatActivity {
                     {
                         ParseObject groupMembers = new ParseObject(groupName);
                         groupMembers.put("Username",listUsernames[i]);
-                        groupMembers.put("Messages","Hi from " + listUsernames[i]);
+                        groupMembers.put("Messages","Hi");
                         groupMembers.saveInBackground();
                     }
 
