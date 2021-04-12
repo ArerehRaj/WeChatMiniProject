@@ -31,6 +31,7 @@ public class GroupChatDMActivity extends AppCompatActivity {
     ListView groupsListView;
     SimpleAdapter simpleAdapter;
     EditText editTextGroupMessages;
+    List<Map<String, String>> groupData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class GroupChatDMActivity extends AppCompatActivity {
                 {
                     if(objects != null && objects.size() > 0)
                     {
-                        List<Map<String, String>> groupData = new ArrayList<>();
+                        groupData = new ArrayList<>();
                         for(ParseObject object : objects)
                         {
                             Map<String, String> chatInfo = new HashMap<>();
@@ -107,6 +108,10 @@ public class GroupChatDMActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 if(e == null)
                 {
+                    Map<String, String> chatInfo = new HashMap<>();
+                    chatInfo.put("Message",messageContent);
+                    chatInfo.put("Name",ParseUser.getCurrentUser().getUsername());
+                    groupData.add(chatInfo);
                     simpleAdapter.notifyDataSetChanged();
                 }
             }
