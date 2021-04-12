@@ -109,13 +109,13 @@ public class AddGroupActivity extends AppCompatActivity {
 //                    Toast.makeText(AddGroupActivity.this,"SUCCESS",Toast.LENGTH_SHORT).show();
                     for(int i=0; i<listUsernames.length; i++)
                     {
-                        ParseObject groupMembers = new ParseObject(groupName);
+                        ParseObject groupMembers = new ParseObject(groupName.replace(" ",""));
                         groupMembers.put("Username",listUsernames[i]);
                         groupMembers.put("Messages","Hi");
                         groupMembers.saveInBackground();
                     }
 
-                    ParseObject groupMembers = new ParseObject(groupName);
+                    ParseObject groupMembers = new ParseObject(groupName.replace(" ",""));
                     groupMembers.put("Username",ParseUser.getCurrentUser().getUsername());
                     groupMembers.put("Messages","Hi from " + ParseUser.getCurrentUser().getUsername());
                     groupMembers.saveInBackground();

@@ -49,7 +49,7 @@ public class GroupChatDMActivity extends AppCompatActivity {
 
         editTextGroupMessages = findViewById(R.id.editTextGroupMessages);
 
-        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(groupName);
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(groupName.replace(" ",""));
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -97,7 +97,7 @@ public class GroupChatDMActivity extends AppCompatActivity {
     public void sendMessageToGroup(View view)
     {
         String messageContent = editTextGroupMessages.getText().toString();
-        ParseObject message = new ParseObject(groupName);
+        ParseObject message = new ParseObject(groupName.replace(" ",""));
         message.put("Username",ParseUser.getCurrentUser().getUsername());
         message.put("Messages",messageContent);
 
