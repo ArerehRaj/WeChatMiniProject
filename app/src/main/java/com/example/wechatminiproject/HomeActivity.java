@@ -78,4 +78,10 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    public void goToGroupChats(View view)
+    {
+        Intent intent = new Intent(HomeActivity.this, GroupChatsActivity.class);
+        startActivity(intent);
+    }
 }

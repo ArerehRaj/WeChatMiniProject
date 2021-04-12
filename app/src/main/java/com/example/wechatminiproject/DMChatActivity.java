@@ -24,6 +24,7 @@ import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DMChatActivity extends AppCompatActivity {
 
@@ -38,7 +39,7 @@ public class DMChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_d_m_chat);
 
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         title = findViewById(R.id.ChatWithTitle);
         title.setText(getIntent().getStringExtra("name"));
