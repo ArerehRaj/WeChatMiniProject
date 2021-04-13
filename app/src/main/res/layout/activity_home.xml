@@ -167,13 +167,13 @@
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:layout_marginTop="14dp"
-                        android:background="@color/black"/>
+                        android:background="@drawable/images"/>
 
                     <TextView
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:text="Screening Tool"
+                        android:text="Images"
                         android:fontFamily="@font/belleza"
                         android:textSize="19dp"
                         android:gravity="center_horizontal" />
@@ -201,14 +201,14 @@
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:layout_marginTop="-6dp"
-                        android:background="@color/black"/>
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/document"/>
 
                     <TextView
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
-                        android:text="Do's &amp; Don't"
+                        android:text="Documents"
                         android:fontFamily="@font/belleza"
                         android:textSize="20dp"
                         android:gravity="center_horizontal" />
