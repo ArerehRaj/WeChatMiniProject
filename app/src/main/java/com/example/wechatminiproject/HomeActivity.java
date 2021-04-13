@@ -75,6 +75,7 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("division",division);
         intent.putExtra("year",year);
         intent.putExtra("branch",branch);
+        intent.putExtra("Code",1);
         startActivity(intent);
 
     }
@@ -87,4 +88,14 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("branch",branch);
         startActivity(intent);
     }
+
+    public void goToImages(View view)
+    {
+        Intent intent = new Intent(HomeActivity.this, ImagesActivity.class);
+        intent.putExtra("division",division);
+        intent.putExtra("year",year);
+        intent.putExtra("branch",branch);
+        startActivity(intent);
+    }
+
 }

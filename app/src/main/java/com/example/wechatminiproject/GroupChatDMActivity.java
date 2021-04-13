@@ -45,7 +45,7 @@ public class GroupChatDMActivity extends AppCompatActivity {
         TextView myTitle = findViewById(R.id.textViewGroupTitle);
         myTitle.setText(groupName);
 
-        groupsListView = findViewById(R.id.groupChatsDMMessages);
+        groupsListView = findViewById(R.id.ImagesDMTexts);
 
         editTextGroupMessages = findViewById(R.id.editTextGroupMessages);
 

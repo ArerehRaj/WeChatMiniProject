@@ -40,6 +40,8 @@ public class ChatsActivity extends AppCompatActivity {
     ListView chatsListView;
     MyAdapter myAdapter;
 
+    int code = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,7 @@ public class ChatsActivity extends AppCompatActivity {
         String branch = getIntent().getStringExtra("branch");
         String year = getIntent().getStringExtra("year");
         String division = getIntent().getStringExtra("division");
+        code = getIntent().getIntExtra("Code",0);
 
         chatsListView = findViewById(R.id.myChatsListView);
 
@@ -89,10 +92,21 @@ public class ChatsActivity extends AppCompatActivity {
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                                Toast.makeText(ChatsActivity.this,fullNames.get(position) + " Clicked", Toast.LENGTH_SHORT).show();
 
-                                Intent intent = new Intent(ChatsActivity.this, DMChatActivity.class);
-                                intent.putExtra("name",fullNames.get(position));
-                                intent.putExtra("username", userNames.get(position));
-                                startActivity(intent);
+                                if(code == 1)
+                                {
+                                    Intent intent = new Intent(ChatsActivity.this, DMChatActivity.class);
+                                    intent.putExtra("name",fullNames.get(position));
+                                    intent.putExtra("username", userNames.get(position));
+                                    startActivity(intent);
+                                }
+
+                                else if(code == 2)
+                                {
+                                    Intent intent = new Intent(ChatsActivity.this,ImagesDMActivity.class);
+                                    intent.putExtra("name",fullNames.get(position));
+                                    intent.putExtra("username", userNames.get(position));
+                                    startActivity(intent);
+                                }
 
                             }
                         });

@@ -160,6 +160,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="goToImages"
                     android:orientation="vertical"
                     android:padding="6dp">
 
