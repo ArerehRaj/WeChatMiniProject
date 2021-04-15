@@ -86,6 +86,7 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("division",division);
         intent.putExtra("year",year);
         intent.putExtra("branch",branch);
+        intent.putExtra("CODE", 10);
         startActivity(intent);
     }
 

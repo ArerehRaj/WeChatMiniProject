@@ -60,10 +60,15 @@ public class GroupChatDMActivity extends AppCompatActivity {
                         groupData = new ArrayList<>();
                         for(ParseObject object : objects)
                         {
-                            Map<String, String> chatInfo = new HashMap<>();
-                            chatInfo.put("Message",object.get("Messages").toString());
-                            chatInfo.put("Name",object.get("Username").toString());
-                            groupData.add(chatInfo);
+//                            Map<String, String> chatInfo = new HashMap<>();
+                            if(object.get("Messages") != null && object.get("Username") != null)
+                            {
+                                Map<String, String> chatInfo = new HashMap<>();
+                                chatInfo.put("Message",object.get("Messages").toString());
+                                chatInfo.put("Name",object.get("Username").toString());
+                                groupData.add(chatInfo);
+                            }
+//                            groupData.add(chatInfo);
                         }
                         simpleAdapter = new SimpleAdapter(GroupChatDMActivity.this, groupData, android.R.layout.simple_list_item_2, new String[] {"Message","Name"},new int[] {android.R.id.text1, android.R.id.text2}){
 

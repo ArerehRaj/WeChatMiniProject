@@ -40,6 +40,7 @@ public class GroupChatsActivity extends AppCompatActivity {
     List<ParseFile> files = new ArrayList<>();
     List<Bitmap> GroupImages = new ArrayList<>();
     MyAdapter myAdapter;
+    int code = 0;
 
 
     @Override
@@ -54,13 +55,25 @@ public class GroupChatsActivity extends AppCompatActivity {
         title.setText(ParseUser.getCurrentUser().getUsername() + "'s Groups");
         groupsListView = findViewById(R.id.groupsListView);
 
+        code = getIntent().getIntExtra("CODE",0);
+
         groupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                Toast.makeText(GroupChatsActivity.this, GroupNames.get(position) + " CLicked", Toast.LENGTH_SHORT).show();
-                Intent newIntent = new Intent(GroupChatsActivity.this, GroupChatDMActivity.class);
-                newIntent.putExtra("name",GroupNames.get(position));
-                startActivity(newIntent);
+               if(code == 10)
+               {
+                   Intent newIntent = new Intent(GroupChatsActivity.this, GroupChatDMActivity.class);
+                   newIntent.putExtra("name",GroupNames.get(position));
+                   startActivity(newIntent);
+               }
+
+               else if(code == 20)
+               {
+                   Intent newIntent = new Intent(GroupChatsActivity.this, GroupsImagesActivity.class);
+                   newIntent.putExtra("name",GroupNames.get(position));
+                   startActivity(newIntent);
+               }
             }
         });
 

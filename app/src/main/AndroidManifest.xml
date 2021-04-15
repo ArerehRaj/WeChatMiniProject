@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeChatMiniProject">
-        <activity android:name=".ViewDMImageActivity"></activity>
+        <activity android:name=".GroupsImagesActivity"></activity>
+        <activity android:name=".ViewDMImageActivity" />
         <activity android:name=".ImagesDMActivity" />
         <activity android:name=".ImagesActivity" />
         <activity android:name=".GroupChatDMActivity" />
@@ -43,9 +44,6 @@
         <meta-data
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/back4app_client_key" />
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
