@@ -198,6 +198,8 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
+                    android:clickable="true"
+                    android:onClick="goToDocuments"
                     android:padding="6dp">
 
                     <ImageView

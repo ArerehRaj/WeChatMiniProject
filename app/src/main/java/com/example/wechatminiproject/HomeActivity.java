@@ -99,4 +99,13 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void goToDocuments(View view)
+    {
+        Intent intent = new Intent(HomeActivity.this, MediaFilesActivity.class);
+        intent.putExtra("division",division);
+        intent.putExtra("year",year);
+        intent.putExtra("branch",branch);
+        startActivity(intent);
+    }
+
 }
