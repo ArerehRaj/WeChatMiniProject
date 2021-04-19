@@ -22,8 +22,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+
+import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 public class MediaFilesActivity extends AppCompatActivity {
 
@@ -114,14 +120,36 @@ public class MediaFilesActivity extends AppCompatActivity {
         {
             try {
                 InputStream inputStream = getContentResolver().openInputStream(selectedFile);
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                System.out.println("BITMAP " + bitmap);
+//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                System.out.println("URI " + selectedFile);
+                byte[] inputData = getBytes(inputStream);
+                System.out.println("Bytes " + Arrays.toString(inputData));
+                ParseObject object = new ParseObject("DMSImages");
+                object.put("sender","arerehraj");
+                object.put("recipient","ebu");
+                ParseFile file = new ParseFile("newFile.docx",inputData);
+                object.put("Images",file);
+
+                object.saveInBackground();
+
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
         }
+    }
+
+    public byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
     }
 
 }
