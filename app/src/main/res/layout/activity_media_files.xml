@@ -14,7 +14,7 @@
         android:layout_gravity="center_horizontal"
         android:fontFamily="@font/belleza"
         android:gravity="center_horizontal"
-        android:text="Media Files"
+        android:text="Send Media Files"
         android:textColor="#000000"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,15 +23,46 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.039" />
 
-    <Button
-        android:id="@+id/button12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="selectFiles"
-        android:text="Select Files"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/heading"
-        app:layout_constraintVertical_bias="0.173" />
+        app:srcCompat="@drawable/accept" />
+
+    <Button
+        android:id="@+id/button12"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/belleza"
+        android:onClick="sendToDmList"
+        android:text="Send dms"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.164"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.151" />
+
+    <Button
+        android:id="@+id/button14"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/belleza"
+        android:text="Send Group"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.307"
+        app:layout_constraintStart_toEndOf="@+id/button12"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.151" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

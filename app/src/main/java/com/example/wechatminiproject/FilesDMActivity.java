@@ -3,55 +3,69 @@ package com.example.wechatminiproject;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
-import android.provider.MediaStore;
+import android.text.InputType;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-public class MediaFilesActivity extends AppCompatActivity {
+public class FilesDMActivity extends AppCompatActivity {
+
+    String username = "";
+    String fullName = "";
+    String messageToReciever = "";
+    ListView mySendFilesListView;
+
+    List<Map<String, String>> fileData;
+    SimpleAdapter simpleAdapter;
+    List<String> senders = new ArrayList<>();
+    List<String> reciever = new ArrayList<>();
+    List<String> fileMessages = new ArrayList<>();
+    List<byte[]> bytesArrays = new ArrayList<>();
+//    List<Bitmap> myBitMapArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_media_files);
+        setContentView(R.layout.activity_files_d_m);
 
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
+
+        fullName = getIntent().getStringExtra("name");
+        username = getIntent().getStringExtra("username");
+
+        mySendFilesListView = findViewById(R.id.mySendFilesListView);
+
+        TextView title = findViewById(R.id.sendDMFile);
+        title.setText(getIntent().getStringExtra("name"));
     }
-
-    public void sendToDmList(View view)
-    {
-        Intent intent = new Intent(MediaFilesActivity.this, ChatsActivity.class);
-        intent.putExtra("division",getIntent().getStringExtra("division"));
-        intent.putExtra("year",getIntent().getStringExtra("year"));
-        intent.putExtra("branch",getIntent().getStringExtra("branch"));
-        intent.putExtra("Code",3);
-        startActivity(intent);
-    }
-
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void selectFiles(View view)
@@ -64,7 +78,6 @@ public class MediaFilesActivity extends AppCompatActivity {
         {
             getDocument();
         }
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -79,17 +92,35 @@ public class MediaFilesActivity extends AppCompatActivity {
         startActivityForResult(intent, 30);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    public void SelectImage(View view)
+    public void SelectFilesFromManager(View view)
     {
-        if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},30);
-        }
-        else
-        {
-            getDocument();
-        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Write the message for the image");
+
+        final EditText input = new EditText(this);
+
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                messageToReciever = input.getText().toString();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    getDocument();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -119,17 +150,30 @@ public class MediaFilesActivity extends AppCompatActivity {
         {
             try {
                 InputStream inputStream = getContentResolver().openInputStream(selectedFile);
-//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                System.out.println("URI " + selectedFile);
-                System.out.println("File path " + GetFileExtension(selectedFile));
                 byte[] inputData = getBytes(inputStream);
-                System.out.println("Bytes " + Arrays.toString(inputData));
-                ParseObject object = new ParseObject("DMSImages");
-                object.put("sender","arerehraj");
-                object.put("recipient","ebu");
-                ParseFile file = new ParseFile("newFile.docx",inputData);
-                object.put("Images",file);
+                bytesArrays.add(inputData);
 
+                ParseObject object = new ParseObject("DMSFiles");
+                object.put("sender", ParseUser.getCurrentUser().getUsername());
+                object.put("recipient",username);
+                object.put("FileMessage",messageToReciever);
+
+                ParseFile file = null;
+
+                if(GetFileExtension(selectedFile).contains("pdf"))
+                {
+                    file = new ParseFile("file.pdf",inputData);
+                }
+                else if(GetFileExtension(selectedFile).contains("ppt"))
+                {
+                    file = new ParseFile("file.ppt",inputData);
+                }
+                else if(GetFileExtension(selectedFile).contains("doc"))
+                {
+                    file = new ParseFile("file.doc",inputData);
+                }
+
+                object.put("File",file);
                 object.saveInBackground();
 
             }

@@ -108,6 +108,14 @@ public class ChatsActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
 
+                                else if(code == 3)
+                                {
+                                    Intent intent = new Intent(ChatsActivity.this,FilesDMActivity.class);
+                                    intent.putExtra("name",fullNames.get(position));
+                                    intent.putExtra("username", userNames.get(position));
+                                    startActivity(intent);
+                                }
+
                             }
                         });
                     }
