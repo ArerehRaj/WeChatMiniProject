@@ -16,22 +16,31 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
+import com.parse.GetDataCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -65,6 +74,84 @@ public class FilesDMActivity extends AppCompatActivity {
 
         TextView title = findViewById(R.id.sendDMFile);
         title.setText(getIntent().getStringExtra("name"));
+
+        ParseQuery<ParseObject> queryOne = new ParseQuery<ParseObject>("DMSFiles");
+        queryOne.whereEqualTo("sender", ParseUser.getCurrentUser().getUsername());
+        queryOne.whereEqualTo("recipient",username);
+
+        ParseQuery<ParseObject> queryTwo = new ParseQuery<ParseObject>("DMSFiles");
+        queryTwo.whereEqualTo("recipient",ParseUser.getCurrentUser().getUsername());
+        queryTwo.whereEqualTo("sender",username);
+
+        ArrayList<ParseQuery<ParseObject>> queries = new ArrayList<>();
+        queries.add(queryOne);
+        queries.add(queryTwo);
+
+        ParseQuery<ParseObject> query = ParseQuery.or(queries);
+        query.orderByAscending("createdAt");
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if(e == null)
+                {
+                    senders.clear();
+                    reciever.clear();
+                    fileMessages.clear();
+                    bytesArrays.clear();
+                    if(objects.size() > 0 && objects != null)
+                    {
+                        fileData = new ArrayList<>();
+                        for(ParseObject object : objects)
+                        {
+                            Map<String, String> chatInfo = new HashMap<>();
+                            chatInfo.put("Message",object.get("FileMessage").toString());
+                            chatInfo.put("Name",object.get("sender").toString());
+
+                            senders.add(object.get("sender").toString());
+                            reciever.add(object.get("recipient").toString());
+                            fileMessages.add(object.get("FileMessage").toString());
+
+                            ParseFile file = (ParseFile) object.get("File");
+                            file.getDataInBackground(new GetDataCallback() {
+                                @Override
+                                public void done(byte[] data, ParseException e) {
+                                    if(e == null && data != null)
+                                    {
+                                        bytesArrays.add(data);
+                                    }
+                                }
+                            });
+                            fileData.add(chatInfo);
+                        }
+                        simpleAdapter = new SimpleAdapter(FilesDMActivity.this, fileData, android.R.layout.simple_list_item_2, new String[] {"Message","Name"},new int[] {android.R.id.text1, android.R.id.text2}){
+
+                            @Override
+                            public View getView(int position, View convertView, ViewGroup parent) {
+
+                                View view = super.getView(position, convertView, parent);
+
+                                TextView one = view.findViewById(android.R.id.text1);
+                                TextView two = view.findViewById(android.R.id.text2);
+
+                                one.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                                two.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+
+                                if(two.getText().equals(ParseUser.getCurrentUser().getUsername()))
+                                {
+                                    one.setGravity(Gravity.END);
+                                    two.setGravity(Gravity.END);
+                                }
+
+                                return view;
+                            }
+                        };
+                        mySendFilesListView.setAdapter(simpleAdapter);
+                    }
+                }
+            }
+        });
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -174,7 +261,56 @@ public class FilesDMActivity extends AppCompatActivity {
                 }
 
                 object.put("File",file);
-                object.saveInBackground();
+                object.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if(e == null)
+                        {
+                            Map<String, String> chatInfo = new HashMap<>();
+
+                            chatInfo.put("Message",messageToReciever);
+                            chatInfo.put("Name",ParseUser.getCurrentUser().getUsername());
+
+                            senders.add(ParseUser.getCurrentUser().getUsername());
+                            reciever.add(username);
+                            fileMessages.add(messageToReciever);
+
+                            if(fileData == null)
+                            {
+                                fileData = new ArrayList<>();
+                                System.out.println("NULL HAI");
+                            }
+                            else
+                            {
+                                System.out.println("NOT NULL");
+                            }
+                            fileData.add(chatInfo);
+                            simpleAdapter = new SimpleAdapter(FilesDMActivity.this, fileData, android.R.layout.simple_list_item_2, new String[] {"Message","Name"},new int[] {android.R.id.text1, android.R.id.text2}){
+
+                                @Override
+                                public View getView(int position, View convertView, ViewGroup parent) {
+
+                                    View view = super.getView(position, convertView, parent);
+
+                                    TextView one = view.findViewById(android.R.id.text1);
+                                    TextView two = view.findViewById(android.R.id.text2);
+
+                                    one.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                                    two.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+
+                                    if(two.getText().equals(ParseUser.getCurrentUser().getUsername()))
+                                    {
+                                        one.setGravity(Gravity.END);
+                                        two.setGravity(Gravity.END);
+                                    }
+
+                                    return view;
+                                }
+                            };
+                            mySendFilesListView.setAdapter(simpleAdapter);
+                        }
+                    }
+                });
 
             }
             catch (Exception e)
