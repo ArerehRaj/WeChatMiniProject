@@ -7,24 +7,32 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.DownloadManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.text.InputType;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.GetDataCallback;
@@ -35,9 +43,18 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -57,6 +74,8 @@ public class FilesDMActivity extends AppCompatActivity {
     List<String> senders = new ArrayList<>();
     List<String> reciever = new ArrayList<>();
     List<String> fileMessages = new ArrayList<>();
+    List<String> filesURLS = new ArrayList<>();
+    List<String> fileNames = new ArrayList<>();
     List<byte[]> bytesArrays = new ArrayList<>();
 //    List<Bitmap> myBitMapArrayList = new ArrayList<>();
 
@@ -113,6 +132,8 @@ public class FilesDMActivity extends AppCompatActivity {
                             fileMessages.add(object.get("FileMessage").toString());
 
                             ParseFile file = (ParseFile) object.get("File");
+                            filesURLS.add(file.getUrl());
+                            fileNames.add(file.getName());
                             file.getDataInBackground(new GetDataCallback() {
                                 @Override
                                 public void done(byte[] data, ParseException e) {
@@ -149,6 +170,42 @@ public class FilesDMActivity extends AppCompatActivity {
                         mySendFilesListView.setAdapter(simpleAdapter);
                     }
                 }
+            }
+        });
+
+        mySendFilesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(FilesDMActivity.this);
+                builder.setTitle("Do you want to Download the file?");
+
+
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                        Uri uri = Uri.parse(filesURLS.get(position));
+
+                        DownloadManager.Request request = new DownloadManager.Request(uri);
+                        request.setTitle(fileNames.get(position));
+                        request.setDescription("Downloading");
+                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,fileNames.get(position));
+                        downloadmanager.enqueue(request);
+
+                        Toast.makeText(FilesDMActivity.this, "File has been Successfully Downloaded in your File Manager.",Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+                return true;
             }
         });
 
@@ -260,6 +317,9 @@ public class FilesDMActivity extends AppCompatActivity {
                     file = new ParseFile("file.doc",inputData);
                 }
 
+                filesURLS.add(file.getUrl());
+                fileNames.add(file.getName());
+
                 object.put("File",file);
                 object.saveInBackground(new SaveCallback() {
                     @Override
@@ -339,6 +399,57 @@ public class FilesDMActivity extends AppCompatActivity {
             byteBuffer.write(buffer, 0, len);
         }
         return byteBuffer.toByteArray();
+    }
+
+    public class DownloadFileFromUrl extends AsyncTask<String,String,String>
+    {
+        @Override
+        protected String doInBackground(String... urls) {
+            int count;
+            try {
+                URL url = new URL(urls[0]);
+                URLConnection connection = url.openConnection();
+                connection.connect();
+
+                // this will be useful so that you can show a tipical 0-100%
+                // progress bar
+                int lenghtOfFile = connection.getContentLength();
+
+                // download the file
+                InputStream input = new BufferedInputStream(url.openStream(),
+                        8192);
+
+                // Output stream
+                OutputStream output = new FileOutputStream(Environment
+                        .getExternalStorageDirectory().toString() + "/2011.pdf");
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    // After this onProgressUpdate will be called
+                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+
+                    // writing data to file
+                    output.write(data, 0, count);
+                }
+
+                // flushing output
+                output.flush();
+
+                // closing streams
+                output.close();
+                input.close();
+
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
+            }
+
+            return null;
+        }
     }
 
 }
