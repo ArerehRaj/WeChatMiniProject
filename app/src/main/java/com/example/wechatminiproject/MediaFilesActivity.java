@@ -52,6 +52,15 @@ public class MediaFilesActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void sendToGroupsList(View view)
+    {
+        Intent intent = new Intent(MediaFilesActivity.this, GroupChatsActivity.class);
+        intent.putExtra("division",getIntent().getStringExtra("division"));
+        intent.putExtra("year",getIntent().getStringExtra("year"));
+        intent.putExtra("branch",getIntent().getStringExtra("branch"));
+        intent.putExtra("CODE",30);
+        startActivity(intent);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void selectFiles(View view)

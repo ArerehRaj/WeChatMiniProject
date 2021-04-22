@@ -56,6 +56,7 @@
         android:layout_height="150dp"
         android:layout_marginTop="32dp"
         android:fontFamily="@font/belleza"
+        android:onClick="sendToGroupsList"
         android:text="Send Group"
         android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"

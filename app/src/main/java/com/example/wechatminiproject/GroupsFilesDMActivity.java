@@ -6,20 +6,17 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.Manifest;
 import android.app.DownloadManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.StrictMode;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
@@ -44,108 +41,85 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class FilesDMActivity extends AppCompatActivity {
+public class GroupsFilesDMActivity extends AppCompatActivity {
 
-    String username = "";
-    String fullName = "";
-    String messageToReciever = "";
-    ListView mySendFilesListView;
-
-    List<Map<String, String>> fileData;
+    TextView title;
+    String groupName = "";
+    ListView GroupFilesDMListView;
     SimpleAdapter simpleAdapter;
-    List<String> senders = new ArrayList<>();
-    List<String> reciever = new ArrayList<>();
+    List<Map<String, String>> groupFilesData;
     List<String> fileMessages = new ArrayList<>();
-    List<String> filesURLS = new ArrayList<>();
+    List<String> fileUrls = new ArrayList<>();
     List<String> fileNames = new ArrayList<>();
-    List<byte[]> bytesArrays = new ArrayList<>();
-//    List<Bitmap> myBitMapArrayList = new ArrayList<>();
+    List<byte[]> bytesArray = new ArrayList<>();
+    String messageToReciever = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_files_d_m);
+        setContentView(R.layout.activity_groups_files_d_m);
 
         Objects.requireNonNull(getSupportActionBar()).hide();
+        title = findViewById(R.id.groupTitleFiles);
 
-        fullName = getIntent().getStringExtra("name");
-        username = getIntent().getStringExtra("username");
+        groupName = getIntent().getStringExtra("name");
+        title.setText(groupName);
 
-        mySendFilesListView = findViewById(R.id.mySendFilesListView);
+        GroupFilesDMListView = findViewById(R.id.GroupFilesDMListView);
 
-        TextView title = findViewById(R.id.sendDMFile);
-        title.setText(getIntent().getStringExtra("name"));
-
-        ParseQuery<ParseObject> queryOne = new ParseQuery<ParseObject>("DMSFiles");
-        queryOne.whereEqualTo("sender", ParseUser.getCurrentUser().getUsername());
-        queryOne.whereEqualTo("recipient",username);
-
-        ParseQuery<ParseObject> queryTwo = new ParseQuery<ParseObject>("DMSFiles");
-        queryTwo.whereEqualTo("recipient",ParseUser.getCurrentUser().getUsername());
-        queryTwo.whereEqualTo("sender",username);
-
-        ArrayList<ParseQuery<ParseObject>> queries = new ArrayList<>();
-        queries.add(queryOne);
-        queries.add(queryTwo);
-
-        ParseQuery<ParseObject> query = ParseQuery.or(queries);
-        query.orderByAscending("createdAt");
-
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(groupName.replace(" ",""));
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if(e == null)
                 {
-                    senders.clear();
-                    reciever.clear();
-                    fileMessages.clear();
-                    bytesArrays.clear();
-                    if(objects.size() > 0 && objects != null)
+                    if(objects != null && objects.size() > 0)
                     {
-                        fileData = new ArrayList<>();
+                        fileMessages.clear();
+                        fileNames.clear();
+                        fileUrls.clear();
+                        groupFilesData = new ArrayList<>();
+
                         for(ParseObject object : objects)
                         {
-                            Map<String, String> chatInfo = new HashMap<>();
-                            chatInfo.put("Message",object.get("FileMessage").toString());
-                            chatInfo.put("Name",object.get("sender").toString());
+                            if(object.get("Username") != null && object.get("FileMessage") != null && object.get("File") != null)
+                            {
+                                Map<String, String> fileChatInfo = new HashMap<>();
+                                fileChatInfo.put("Message",object.get("FileMessage").toString());
+                                fileChatInfo.put("Name",object.get("Username").toString());
+                                fileMessages.add(object.get("FileMessage").toString());
 
-                            senders.add(object.get("sender").toString());
-                            reciever.add(object.get("recipient").toString());
-                            fileMessages.add(object.get("FileMessage").toString());
+                                ParseFile file = (ParseFile) object.get("File");
+                                fileNames.add(file.getName());
+                                fileUrls.add(file.getUrl());
 
-                            ParseFile file = (ParseFile) object.get("File");
-                            filesURLS.add(file.getUrl());
-                            fileNames.add(file.getName());
-                            file.getDataInBackground(new GetDataCallback() {
-                                @Override
-                                public void done(byte[] data, ParseException e) {
-                                    if(e == null && data != null)
-                                    {
-                                        bytesArrays.add(data);
+                                file.getDataInBackground(new GetDataCallback() {
+                                    @Override
+                                    public void done(byte[] data, ParseException e) {
+                                        if(e == null && data != null)
+                                        {
+                                            bytesArray.add(data);
+                                        }
                                     }
-                                }
-                            });
-                            fileData.add(chatInfo);
+                                });
+                                groupFilesData.add(fileChatInfo);
+                            }
                         }
-                        simpleAdapter = new SimpleAdapter(FilesDMActivity.this, fileData, android.R.layout.simple_list_item_2, new String[] {"Message","Name"},new int[] {android.R.id.text1, android.R.id.text2}){
+
+                        simpleAdapter = new SimpleAdapter(GroupsFilesDMActivity.this, groupFilesData, android.R.layout.simple_list_item_2, new String[] {"Message","Name"},new int[] {android.R.id.text1, android.R.id.text2}){
 
                             @Override
                             public View getView(int position, View convertView, ViewGroup parent) {
@@ -167,16 +141,16 @@ public class FilesDMActivity extends AppCompatActivity {
                                 return view;
                             }
                         };
-                        mySendFilesListView.setAdapter(simpleAdapter);
+                        GroupFilesDMListView.setAdapter(simpleAdapter);
                     }
                 }
             }
         });
 
-        mySendFilesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        GroupFilesDMListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(FilesDMActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(GroupsFilesDMActivity.this);
                 builder.setTitle("Do you want to Download the file?");
 
 
@@ -185,7 +159,7 @@ public class FilesDMActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                        Uri uri = Uri.parse(filesURLS.get(position));
+                        Uri uri = Uri.parse(fileUrls.get(position));
 
                         DownloadManager.Request request = new DownloadManager.Request(uri);
                         request.setTitle(fileNames.get(position));
@@ -193,7 +167,7 @@ public class FilesDMActivity extends AppCompatActivity {
                         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,fileNames.get(position));
                         downloadmanager.enqueue(request);
 
-                        Toast.makeText(FilesDMActivity.this, "File has been Successfully Downloaded in your File Manager.",Toast.LENGTH_LONG).show();
+                        Toast.makeText(GroupsFilesDMActivity.this, "File has been Successfully Downloaded in your File Manager.",Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -212,20 +186,7 @@ public class FilesDMActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
-    public void selectFiles(View view)
-    {
-        if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},30);
-        }
-        else
-        {
-            getDocument();
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    public void getDocument()
+    public void getFile()
     {
         Intent chooseFile;
         Intent intent;
@@ -252,7 +213,7 @@ public class FilesDMActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 messageToReciever = input.getText().toString();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    getDocument();
+                    getFile();
                 }
             }
         });
@@ -276,7 +237,7 @@ public class FilesDMActivity extends AppCompatActivity {
         {
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
-                getDocument();
+                getFile();
             }
         }
     }
@@ -290,16 +251,17 @@ public class FilesDMActivity extends AppCompatActivity {
         {
             selectedFile = data.getData();
         }
+
         if(requestCode == 30 && resultCode == RESULT_OK && data != null)
         {
             try {
                 InputStream inputStream = getContentResolver().openInputStream(selectedFile);
                 byte[] inputData = getBytes(inputStream);
-                bytesArrays.add(inputData);
+                bytesArray.add(inputData);
 
-                ParseObject object = new ParseObject("DMSFiles");
-                object.put("sender", ParseUser.getCurrentUser().getUsername());
-                object.put("recipient",username);
+                ParseObject object = new ParseObject(groupName.replace(" ",""));
+
+                object.put("Username", ParseUser.getCurrentUser().getUsername());
                 object.put("FileMessage",messageToReciever);
 
                 ParseFile file = null;
@@ -317,35 +279,34 @@ public class FilesDMActivity extends AppCompatActivity {
                     file = new ParseFile("file.doc",inputData);
                 }
 
-                filesURLS.add(file.getUrl());
+                fileUrls.add(file.getUrl());
                 fileNames.add(file.getName());
 
                 object.put("File",file);
+
                 object.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         if(e == null)
                         {
-                            Map<String, String> chatInfo = new HashMap<>();
+                            Map<String, String> fileChatInfo = new HashMap<>();
+                            fileChatInfo.put("Message",object.get("FileMessage").toString());
+                            fileChatInfo.put("Name",object.get("Username").toString());
+                            fileMessages.add(object.get("FileMessage").toString());
 
-                            chatInfo.put("Message",messageToReciever);
-                            chatInfo.put("Name",ParseUser.getCurrentUser().getUsername());
-
-                            senders.add(ParseUser.getCurrentUser().getUsername());
-                            reciever.add(username);
-                            fileMessages.add(messageToReciever);
-
-                            if(fileData == null)
+                            if(groupFilesData == null)
                             {
-                                fileData = new ArrayList<>();
+                                groupFilesData = new ArrayList<>();
                                 System.out.println("NULL HAI");
                             }
                             else
                             {
                                 System.out.println("NOT NULL");
                             }
-                            fileData.add(chatInfo);
-                            simpleAdapter = new SimpleAdapter(FilesDMActivity.this, fileData, android.R.layout.simple_list_item_2, new String[] {"Message","Name"},new int[] {android.R.id.text1, android.R.id.text2}){
+
+                            groupFilesData.add(fileChatInfo);
+
+                            simpleAdapter = new SimpleAdapter(GroupsFilesDMActivity.this, groupFilesData, android.R.layout.simple_list_item_2, new String[] {"Message","Name"},new int[] {android.R.id.text1, android.R.id.text2}){
 
                                 @Override
                                 public View getView(int position, View convertView, ViewGroup parent) {
@@ -367,7 +328,8 @@ public class FilesDMActivity extends AppCompatActivity {
                                     return view;
                                 }
                             };
-                            mySendFilesListView.setAdapter(simpleAdapter);
+
+                            GroupFilesDMListView.setAdapter(simpleAdapter);
                         }
                     }
                 });

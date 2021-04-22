@@ -74,6 +74,13 @@ public class GroupChatsActivity extends AppCompatActivity {
                    newIntent.putExtra("name",GroupNames.get(position));
                    startActivity(newIntent);
                }
+
+               else if(code == 30)
+               {
+                   Intent newIntent = new Intent(GroupChatsActivity.this, GroupsFilesDMActivity.class);
+                   newIntent.putExtra("name",GroupNames.get(position));
+                   startActivity(newIntent);
+               }
             }
         });
 
