@@ -235,6 +235,8 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
+                    android:clickable="true"
+                    android:onClick="toProfilePage"
                     android:padding="6dp">
 
                     <ImageView

@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WeChatMiniProject">
-        <activity android:name=".GroupsFilesDMActivity"></activity>
+        <activity android:name=".UserProfileActivity"></activity>
+        <activity android:name=".GroupsFilesDMActivity" />
         <activity android:name=".FilesDMActivity" />
         <activity android:name=".MediaFilesActivity" />
         <activity android:name=".GroupsImagesActivity" />

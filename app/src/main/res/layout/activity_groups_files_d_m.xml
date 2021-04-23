@@ -17,6 +17,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="4dp"
         android:fontFamily="@font/belleza"
+        android:onClick="SelectFilesFromManager"
         android:text="Select Files"
         android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"

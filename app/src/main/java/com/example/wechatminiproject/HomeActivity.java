@@ -29,6 +29,10 @@ public class HomeActivity extends AppCompatActivity {
     String division = "";
     String year = "";
     String branch = "";
+    String fullName = "";
+    String email = "";
+    List<byte[]> bytesArrays = new ArrayList<>();
+    byte[] imageData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,21 @@ public class HomeActivity extends AppCompatActivity {
                         division = object.get("Division").toString();
                         year = object.get("Year").toString();
                         branch = object.get("Branch").toString();
+                        fullName = object.get("FullName").toString();
+                        email = object.get("Email").toString();
+
+                        ParseFile image = (ParseFile) object.get("ProfileImage");
+                        image.getDataInBackground(new GetDataCallback() {
+                            @Override
+                            public void done(byte[] data, ParseException e) {
+                                if(e == null && data != null)
+                                {
+//                                    bytesArrays.add(data);
+                                    imageData = data;
+                                }
+                            }
+                        });
+
                     }
                 }
             }
@@ -105,6 +124,18 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("division",division);
         intent.putExtra("year",year);
         intent.putExtra("branch",branch);
+        startActivity(intent);
+    }
+
+    public void toProfilePage(View view)
+    {
+        Intent intent = new Intent(HomeActivity.this, UserProfileActivity.class);
+        intent.putExtra("division",division);
+        intent.putExtra("year",year);
+        intent.putExtra("branch",branch);
+        intent.putExtra("Email",email);
+        intent.putExtra("FullName",fullName);
+        intent.putExtra("data",imageData);
         startActivity(intent);
     }
 
