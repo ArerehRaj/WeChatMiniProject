@@ -12,7 +12,7 @@ An easy to use chatting application with one to one and group chatting features 
 # Tech-Stack:
 
 1. Frontend: Java, XML, Dart
-2. Backend: Parse Server(Mongo DB)
+2. Backend: Parse Server(Mongo DB and PostgreSQL)
 
 # How the app works:
 
